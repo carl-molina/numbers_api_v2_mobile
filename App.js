@@ -1,10 +1,27 @@
+import React, { useState } from "react";
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
-export default function App() {
+function App() {
+  const [fact, setFact] = useState('');
+
+  async function fetchRandomFact() {
+    try {
+      const resp = await fetch('http://numbersapi.com/random');
+      if (!resp.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await resp.text();
+      setFact(data);
+    } catch (err) {
+      console.error('Error fetching random fact: ', err);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text>It's Victor and Carl's mobile app TEST 2?! 🎉</Text>
+      <Text>This is fact: {fact}</Text>
+      <Button title="Get Random Fact" onPress={fetchRandomFact}></Button>
       <StatusBar style="auto" />
     </View>
   );
@@ -18,3 +35,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App;
